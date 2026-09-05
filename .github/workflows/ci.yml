@@ -1,0 +1,42 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# CI Workflow: Runs on every Pull Request targeting the main branch.
+# Pipeline:  Checkout → Python Setup → Install Deps → Pytest → Docker Build
+# ─────────────────────────────────────────────────────────────────────────────
+
+name: CI Pipeline
+
+on:
+  pull_request:
+    branches:
+      - main           # Triggers ONLY for PRs targeting main
+
+jobs:
+  build-and-test:
+    name: Build, Test & Validate Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      # ── Step 1: Code Checkout ───────────────────────────────────────────────
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # ── Step 2: Python Setup ────────────────────────────────────────────────
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # ── Step 3: Dependency Installation ────────────────────────────────────
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # ── Step 4: Unit Tests ──────────────────────────────────────────────────
+      # If any test fails, pytest returns exit code 1 and the job stops here.
+      - name: Run unit tests
+        run: python -m pytest tests/ -v
+
+      # ── Step 5: Docker Build Validation (dry-run, no push) ─────────────────
+      # Validates the Dockerfile is syntactically correct and the image builds.
+      # No `docker push` is called — this is purely a build-time sanity check.
+      - name: Docker build validation
+        run: docker build -t test-image .
