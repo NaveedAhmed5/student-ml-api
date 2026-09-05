@@ -33,7 +33,7 @@ def test_health_check_status_is_healthy():
     """GET /health should return status='healthy'."""
     response = client.get("/health")
     data = response.json()
-    assert data["status"] == "wrong"  # INTENTIONALLY BROKEN for CI validation
+    assert data["status"] == "healthy"
 
 
 def test_health_check_returns_api_version():
