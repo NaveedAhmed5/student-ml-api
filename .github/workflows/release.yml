@@ -45,8 +45,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/student-ml-api:${{ env.VERSION }}
-            ghcr.io/${{ github.repository_owner }}/student-ml-api:latest
+            ghcr.io/naveedahmed5/student-ml-api:${{ env.VERSION }}
+            ghcr.io/naveedahmed5/student-ml-api:latest
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -57,5 +57,5 @@ jobs:
             Automated release generated via GitHub Actions.
             
             Docker image available at:
-            `ghcr.io/${{ github.repository_owner }}/student-ml-api:${{ env.VERSION }}`
+            `ghcr.io/naveedahmed5/student-ml-api:${{ env.VERSION }}`
           generate_release_notes: true
