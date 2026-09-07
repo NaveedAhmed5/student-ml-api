@@ -8,10 +8,13 @@ from pydantic import BaseModel, field_validator
 import math
 
 # --- App Initialization ---
+APP_VERSION = "1.1.0"
+MODEL_VERSION = "model-1"
+
 app = FastAPI(
     title="Student ML API",
     description="A simple ML prediction API built for the MLOps Assignment.",
-    version="1.0.0",
+    version=APP_VERSION,
 )
 
 # --- Request / Response Models ---
@@ -33,7 +36,9 @@ class PredictResponse(BaseModel):
 
 class HealthResponse(BaseModel):
     status: str
-    api_version: str
+    application: str
+    application_version: str
+    model_version: str
 
 # --- Endpoints ---
 @app.get("/health", response_model=HealthResponse, tags=["Health"])
@@ -41,7 +46,12 @@ def health_check():
     """
     Returns the current health status of the API.
     """
-    return HealthResponse(status="healthy", api_version="1.0.0")
+    return HealthResponse(
+        status="healthy",
+        application="student-ml-api",
+        application_version=APP_VERSION,
+        model_version=MODEL_VERSION,
+    )
 
 
 @app.post("/predict", response_model=PredictResponse, tags=["Prediction"])
@@ -55,5 +65,5 @@ def predict(request: PredictRequest):
     return PredictResponse(
         input=x,
         prediction=prediction,
-        model_version="1.0.0",
+        model_version=MODEL_VERSION,
     )

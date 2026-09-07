@@ -4,12 +4,13 @@ Assignment 1: MLOps
 
 Covers:
   1. Health check returns 200 with correct status
-  2. Successful prediction with valid input
-  3. Prediction math is correct
-  4. Missing request body returns 422
-  5. Invalid input type (string) returns 422
-  6. Edge case: prediction at value=0
-  7. Negative number input
+  2. Health check returns correct application name and version (v1.1.0)
+  3. Successful prediction with valid input
+  4. Prediction math is correct
+  5. Missing request body returns 422
+  6. Invalid input type (string) returns 422
+  7. Edge case: prediction at value=0
+  8. Negative number input
 """
 
 import pytest
@@ -36,12 +37,26 @@ def test_health_check_status_is_healthy():
     assert data["status"] == "healthy"
 
 
-def test_health_check_returns_api_version():
-    """GET /health should include api_version in response."""
+def test_health_check_returns_application_name():
+    """GET /health should return correct application name."""
     response = client.get("/health")
     data = response.json()
-    assert "api_version" in data
-    assert data["api_version"] == "1.0.0"
+    assert data["application"] == "student-ml-api"
+
+
+def test_health_check_returns_application_version():
+    """GET /health should return application_version='1.1.0'."""
+    response = client.get("/health")
+    data = response.json()
+    assert "application_version" in data
+    assert data["application_version"] == "1.1.0"
+
+
+def test_health_check_returns_model_version():
+    """GET /health should return model_version='model-1'."""
+    response = client.get("/health")
+    data = response.json()
+    assert data["model_version"] == "model-1"
 
 
 # ─────────────────────────────────────────────
